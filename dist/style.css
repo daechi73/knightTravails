@@ -1,0 +1,36 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.container-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.row {
+  display: flex;
+}
+.column {
+  height: 34px;
+  width: 34px;
+  border: solid;
+  border-width: 1px;
+  font-size: 8px;
+}
+.messageBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 40%;
+  left: 34%;
+  z-index: 1;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  height: 30px;
+  width: 300px;
+}

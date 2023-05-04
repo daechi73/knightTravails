@@ -4,7 +4,7 @@ import {
   renderKnight,
   removeKnight,
   renderMoves,
-} from "../Render/renderKnight.js";
+} from "../Render/renderPieces.js";
 import chessBoard from "./board.js";
 
 //find utility
@@ -48,7 +48,7 @@ const checkBatch = (destination, possibleMoves) => {
   }
   return false;
 };
-const preMoves = (node) => {
+const movesMade = (node) => {
   const steps = [node.value];
   while (node.preNode != null) {
     steps.unshift(node.preNode.value);
@@ -65,11 +65,11 @@ const find = (destination, position, moves) => {
     temp.nextMoves = possibleMoves(temp, moves);
     queue = queue.concat(temp.nextMoves);
     const checked = checkBatch(destination, temp.nextMoves);
-    if (checked) return preMoves(checked.destinationFound); // checks nextmoves if match destinationpossibleMovesHolder
+    if (checked) return movesMade(checked.destinationFound); // checks nextmoves if match destinationpossibleMovesHolder
     queue.shift();
     temp = queue[0];
   }
-  return preMoves(temp);
+  return movesMade(temp);
 };
 
 //Game Utility
@@ -81,50 +81,11 @@ const placeKnight = (position, chessBox, knight, board) => {
   renderKnight(chessBox);
 };
 
-const start = (knight, board) => {
-  const boardUI = document.querySelector(".chessBoard");
-  let position;
-  boardUI.addEventListener(
-    "click",
-    (e) => {
-      placeKnight(e.target.textContent, e.target, knight, board);
-      messageBox().addBox("Pick an end destination");
-      //console.log(e.target.textContent);
-      pickDestination(knight, board);
-    },
-    { once: true }
-  );
-};
-const pickDestination = (knight, board) => {
-  const boardUI = document.querySelector(".chessBoard");
-  messageBox().addBox("Pick an end destination");
-  boardUI.addEventListener(
-    "click",
-    function (e) {
-      knight.endPosition = codeToCoordinate(e.target.textContent, board);
-      e.target.innerHTML += `<div class="endContainer"><div class="destination">E</div></div>`;
-
-      animate(
-        find(knight.endPosition, knight.currentPosition, knight.moves()),
-        board,
-        knight
-      );
-    },
-    { once: true }
-  );
-};
-
-const animate = (array, board, knight) => {
-  console.log(array);
-  array.steps.forEach((position, i) => {
-    //console.log(getChessCellDiv(coordinateToCode(position, board)));
+const showPath = (movesMade, board) => {
+  console.log(movesMade);
+  movesMade.steps.forEach((position, i) => {
     if (i > 0) {
-      //renderMoves(, i);
-      //console.log(getChessCellDiv(coordinateToCode(position, board)));
-      //console.log(coordinateToCode(position, board));
-      //console.log(getChessCellDiv(coordinateToCode(position, board)));
-
-      if (i === array.steps.length - 1) {
+      if (i === movesMade.steps.length - 1) {
         const endDiv = getChessCellDiv(
           coordinateToCode(position, board)
         ).firstElementChild;
@@ -171,7 +132,7 @@ const codeToCoordinate = (code, board) => {
     }
   }
 };
-//render utility
+//listener utility
 const msgBoxEventListner = () => {
   const msgBox = document.querySelector(".messageBox");
   if (msgBox) {
@@ -181,5 +142,37 @@ const msgBoxEventListner = () => {
     });
   }
 };
+const pickDestination = (knight, board) => {
+  const boardUI = document.querySelector(".chessBoard");
+  messageBox().addBox("Pick an end destination");
+  boardUI.addEventListener(
+    "click",
+    function (e) {
+      knight.endPosition = codeToCoordinate(e.target.textContent, board);
+      e.target.innerHTML += `<div class="endContainer"><div class="destination">E</div></div>`;
 
-export { msgBoxEventListner, find, start, pickDestination, getChessCellDiv };
+      showPath(
+        find(knight.endPosition, knight.currentPosition, knight.moves()),
+        board,
+        knight
+      );
+    },
+    { once: true }
+  );
+};
+
+const startPosition = (knight, board) => {
+  const boardUI = document.querySelector(".chessBoard");
+  boardUI.addEventListener(
+    "click",
+    (e) => {
+      placeKnight(e.target.textContent, e.target, knight, board);
+      messageBox().addBox("Pick an end destination");
+      //console.log(e.target.textContent);
+      pickDestination(knight, board);
+    },
+    { once: true }
+  );
+};
+
+export { msgBoxEventListner, startPosition };

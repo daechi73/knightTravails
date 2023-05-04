@@ -1,6 +1,6 @@
 import chessBoard from "./board.js";
 import knight from "./knight.js";
-import { find, msgBoxEventListner, start, getChessCellDiv } from "./utility.js";
+import { msgBoxEventListner, startPosition } from "./utility.js";
 import renderBoard from "../Render/renderBoard.js";
 import messageBox from "../Render/messageBox.js";
 
@@ -17,8 +17,7 @@ const knightTravail = () => {
     renderBoard(newBoard);
     messageBox().addBox(`Place your Knight on the board`);
     msgBoxEventListner();
-    start(newKnight, newBoard);
-    getChessCellDiv("a1");
+    startPosition(newKnight, newBoard);
   };
   return { startUp };
 };

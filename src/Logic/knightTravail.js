@@ -1,6 +1,7 @@
 import chessBoard from "./board.js";
 import knight from "./knight.js";
-import { find, msgBoxEventListner } from "./utility.js";
+import { msgBoxEventListner, placeKnight } from "./utility.js";
+import { find } from "./find.js";
 import renderBoard from "../Render/renderBoard.js";
 import messageBox from "../Render/messageBox.js";
 
@@ -15,8 +16,8 @@ const knightTravail = () => {
     const newBoard = chessBoard();
     renderBoard(newBoard);
     messageBox().addBox(`Place your Knight on the board`);
-    //messageBox().deleteBox();
     msgBoxEventListner();
+    placeKnight();
   };
   return { start };
 };

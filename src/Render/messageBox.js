@@ -4,12 +4,14 @@ const messageBox = () => {
   msgBoxContainer.classList.add("msgBoxContainer");
   box.classList.add("messageBox");
   msgBoxContainer.appendChild(box);
+
   const addBox = (message) => {
     document.body.appendChild(msgBoxContainer);
     box.textContent = message;
     document.querySelector(".container-main").style.backgroundColor =
       "rgba(0, 0, 0, 0.7)";
   };
+
   const deleteBox = () => {
     const msgBoxContainer = document.querySelector(".msgBoxContainer");
     if (msgBoxContainer) {

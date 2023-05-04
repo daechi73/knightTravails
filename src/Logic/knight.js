@@ -15,6 +15,7 @@ const knight = (currentPosition) => {
   return {
     name: "k",
     currentPosition,
+    endPosition: null,
     moves,
   };
 };

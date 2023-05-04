@@ -1,7 +1,11 @@
 import chessBoard from "./board.js";
 import knight from "./knight.js";
-import { msgBoxEventListner, placeKnight } from "./utility.js";
-import { find } from "./find.js";
+import {
+  find,
+  msgBoxEventListner,
+  startPosition,
+  pickDestination,
+} from "./utility.js";
 import renderBoard from "../Render/renderBoard.js";
 import messageBox from "../Render/messageBox.js";
 
@@ -13,11 +17,12 @@ const knightTravail = () => {
   //renderBoard();
 
   const start = () => {
+    const newKnight = knight();
     const newBoard = chessBoard();
     renderBoard(newBoard);
     messageBox().addBox(`Place your Knight on the board`);
     msgBoxEventListner();
-    placeKnight();
+    startPosition(newKnight, newBoard);
   };
   return { start };
 };

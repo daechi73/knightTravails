@@ -1,6 +1,10 @@
 import messageBox from "../Render/messageBox.js";
 import knight from "./knight";
-import renderKnight from "../Render/renderKnight.js";
+import {
+  renderKnight,
+  removeKnight,
+  renderMoves,
+} from "../Render/renderKnight.js";
 import chessBoard from "./board.js";
 
 //find utility
@@ -77,15 +81,15 @@ const placeKnight = (position, chessBox, knight, board) => {
   renderKnight(chessBox);
 };
 
-const startPosition = (knight, board) => {
+const start = (knight, board) => {
   const boardUI = document.querySelector(".chessBoard");
   let position;
   boardUI.addEventListener(
     "click",
     (e) => {
-      //console.log(e);
-      e.stopPropagation();
       placeKnight(e.target.textContent, e.target, knight, board);
+      messageBox().addBox("Pick an end destination");
+      //console.log(e.target.textContent);
       pickDestination(knight, board);
     },
     { once: true }
@@ -93,14 +97,65 @@ const startPosition = (knight, board) => {
 };
 const pickDestination = (knight, board) => {
   const boardUI = document.querySelector(".chessBoard");
+  messageBox().addBox("Pick an end destination");
   boardUI.addEventListener(
     "click",
     function (e) {
       knight.endPosition = codeToCoordinate(e.target.textContent, board);
-      e.target.innerHTML += `<div class="destination">E</div>`;
+      e.target.innerHTML += `<div class="endContainer"><div class="destination">E</div></div>`;
+
+      animate(
+        find(knight.endPosition, knight.currentPosition, knight.moves()),
+        board,
+        knight
+      );
     },
     { once: true }
   );
+};
+
+const animate = (array, board, knight) => {
+  console.log(array);
+  array.steps.forEach((position, i) => {
+    //console.log(getChessCellDiv(coordinateToCode(position, board)));
+    if (i > 0) {
+      //renderMoves(, i);
+      //console.log(getChessCellDiv(coordinateToCode(position, board)));
+      //console.log(coordinateToCode(position, board));
+      //console.log(getChessCellDiv(coordinateToCode(position, board)));
+
+      if (i === array.steps.length - 1) {
+        const endDiv = getChessCellDiv(
+          coordinateToCode(position, board)
+        ).firstElementChild;
+
+        renderMoves(endDiv, i);
+      } else {
+        renderMoves(getChessCellDiv(coordinateToCode(position, board)), i);
+      }
+    }
+  });
+};
+
+const getChessCellDiv = (cellCode) => {
+  const cellDivs = document.querySelectorAll(".column");
+  for (const div of cellDivs) {
+    const divCode = div.textContent.split("E");
+    if (divCode[0] === cellCode) {
+      return div;
+    }
+  }
+};
+
+const coordinateToCode = (coord, board) => {
+  const [x, y] = coord;
+  for (const row of board.board) {
+    for (const column of row) {
+      if (column.column == x && column.row == y) {
+        return column.code;
+      }
+    }
+  }
 };
 
 const codeToCoordinate = (code, board) => {
@@ -120,15 +175,11 @@ const codeToCoordinate = (code, board) => {
 const msgBoxEventListner = () => {
   const msgBox = document.querySelector(".messageBox");
   if (msgBox) {
-    window.addEventListener(
-      "click",
-      (e) => {
-        messageBox().deleteBox();
-        //console.log(e);
-      },
-      { once: true }
-    );
+    window.addEventListener("click", (e) => {
+      messageBox().deleteBox();
+      //console.log(e);
+    });
   }
 };
 
-export { msgBoxEventListner, find, startPosition, pickDestination };
+export { msgBoxEventListner, find, start, pickDestination, getChessCellDiv };

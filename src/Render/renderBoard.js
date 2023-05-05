@@ -10,6 +10,7 @@ const renderBoard = (aChessBoard) => {
     row.forEach((column) => {
       const c = document.createElement("div");
       c.classList.add("column");
+      c.classList.add(column.code);
       c.textContent = column.code;
       rows.appendChild(c);
     });

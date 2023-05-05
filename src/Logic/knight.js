@@ -17,6 +17,7 @@ const knight = (currentPosition) => {
     currentPosition,
     endPosition: null,
     moves,
+    movesMade: null,
   };
 };
 

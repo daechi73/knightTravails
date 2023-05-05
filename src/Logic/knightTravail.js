@@ -1,8 +1,9 @@
 import chessBoard from "./board.js";
 import knight from "./knight.js";
-import { msgBoxEventListner, startPosition } from "./utility.js";
+import { startPositionListener, moveKnight } from "./utility.js";
 import renderBoard from "../Render/renderBoard.js";
-import messageBox from "../Render/messageBox.js";
+import { messageBox, msgBoxEventListener } from "../Render/messageBox.js";
+import { renderKnight } from "../Render/renderPieces.js";
 
 const knightTravail = () => {
   // const newKnight = knight([2, 1]);
@@ -15,9 +16,18 @@ const knightTravail = () => {
     const newKnight = knight();
     const newBoard = chessBoard();
     renderBoard(newBoard);
-    messageBox().addBox(`Place your Knight on the board`);
-    msgBoxEventListner();
-    startPosition(newKnight, newBoard);
+
+    // messageBox().addBox(`Place your Knight on the board`);
+    // msgBoxEventListener();
+    // startPositionListener(newKnight, newBoard);
+
+    const cell = document.querySelector(".a8");
+    renderKnight(cell);
+    const btn = document.querySelector(".btn");
+    btn.addEventListener("click", () => {
+      console.log("working");
+      moveKnight();
+    });
   };
   return { startUp };
 };

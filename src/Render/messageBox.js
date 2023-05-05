@@ -23,4 +23,14 @@ const messageBox = () => {
   return { addBox, deleteBox };
 };
 
-export default messageBox;
+const msgBoxEventListener = () => {
+  const msgBox = document.querySelector(".messageBox");
+  if (msgBox) {
+    window.addEventListener("click", (e) => {
+      messageBox().deleteBox();
+      //console.log(e);
+    });
+  }
+};
+
+export { messageBox, msgBoxEventListener };

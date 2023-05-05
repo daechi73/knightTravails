@@ -7,6 +7,7 @@ import {
 } from "../Render/renderPieces.js";
 import chessBoard from "./board.js";
 import find from "./find.js";
+import timer from "./timer";
 
 //Game Utility
 const placeKnight = (position, chessBox, knight, board) => {
@@ -14,33 +15,32 @@ const placeKnight = (position, chessBox, knight, board) => {
   renderKnight(chessBox);
 };
 
+//takes in knights.movesMade & chessboard;
+//renders each moves[position] to UI chessBoard
 const showPath = (movesMade, board) => {
   console.log(movesMade);
-  movesMade.steps.forEach((position, i) => {
+  movesMade.moves.forEach((position, i) => {
     if (i > 0) {
-      if (i === movesMade.steps.length - 1) {
-        const endDiv = getChessCellDiv(
+      if (i === movesMade.moves.length - 1) {
+        //special rendering to destination square
+        const endDiv = getSquareUI(
           coordinateToCode(position, board)
         ).firstElementChild;
-
         renderMoves(endDiv, i);
       } else {
-        renderMoves(getChessCellDiv(coordinateToCode(position, board)), i);
+        //renders to divs that are not starting and end destination
+        renderMoves(getSquareUI(coordinateToCode(position, board)), i);
       }
     }
   });
 };
 
-const getChessCellDiv = (cellCode) => {
-  const cellDivs = document.querySelectorAll(".column");
-  for (const div of cellDivs) {
-    const divCode = div.textContent.split("E");
-    if (divCode[0] === cellCode) {
-      return div;
-    }
-  }
+const getSquareUI = (squareCode) => {
+  const squareUI = document.querySelector(`.${squareCode}`);
+  return squareUI;
 };
 
+//ui uses squareCodes; backside uses coordination
 const coordinateToCode = (coord, board) => {
   const [x, y] = coord;
   for (const row of board.board) {
@@ -52,6 +52,7 @@ const coordinateToCode = (coord, board) => {
   }
 };
 
+//ui uses squareCodes; backside uses coordination
 const codeToCoordinate = (code, board) => {
   for (const row of board.board) {
     for (const column of row) {
@@ -65,12 +66,72 @@ const codeToCoordinate = (code, board) => {
     }
   }
 };
-
-const moveKnight = () => {
-  const knight = document.querySelector(".knight");
-  knight.style.transform = "translateY(20px)";
+//gets new coordination [initial coordination + transition coordination]
+const newCoordinate = (knightCoord, moveCoord) => {
+  const newCoord = [];
+  knightCoord.forEach((axis, i) => {
+    newCoord.push(axis + moveCoord[i]);
+  });
+  return newCoord;
 };
 
+//moves Knight to each individual axis point from each movement coordination
+const moveKnight = (coord, board, axis) => {
+  //console.log(coord + " " + axis);
+  console.log(coord);
+  let [x, y] = coord;
+  let temp;
+  if (axis === "x") {
+    temp = [x, 0];
+  } else {
+    temp = [0, y];
+  }
+  [x, y] = temp;
+  const xLength = x * 51.3;
+  const yLength = y * 51.3;
+  const knight = document.querySelector(".knight");
+  const newPosition = newCoordinate(
+    codeToCoordinate(knight.parentElement.id, board),
+    temp
+  );
+  knight.style.transform = `translateX(${xLength}px) translateY(${yLength}px)`;
+
+  // removeKnight(knight.parentElement);
+  // renderKnight(getSquareUI(coordinateToCode(newPosition, board)));
+
+  const deleteTimer = timer(() => {
+    console.log("parent " + knight.parentElement);
+    console.log("knight " + knight);
+    removeKnight(knight.parentElement);
+    console.log("working");
+  }, 331);
+
+  deleteTimer.start();
+
+  const renderTimer = timer(() => {
+    renderKnight(getSquareUI(coordinateToCode(newPosition, board)));
+    console.log("working2");
+  }, 331);
+  renderTimer.start();
+};
+
+//moves knight to starting point to finishing destination.
+const startToFinish = (knight, board) => {
+  let count = 0;
+  //console.log(knight.movesMade);
+  // ************ make sure to change this to knight.movesMade.moves after**********
+  knight.movesMade.forEach((move) => {
+    //moveKnight(move, board, "x");
+    move.forEach((axis, i) => {
+      if (i === 0) setTimeout(() => moveKnight(move, board, "x"), count);
+      count += 331;
+      if (i === 1) setTimeout(() => moveKnight(move, board, "y"), count);
+      count += 351;
+    });
+  });
+};
+
+//eventlistener that fires the starting of the simulations
 const pickDestinationListener = (knight, board) => {
   const boardUI = document.querySelector(".chessBoard");
   messageBox().addBox("Pick an end destination");
@@ -105,4 +166,4 @@ const startPositionListener = (knight, board) => {
   );
 };
 
-export { startPositionListener, moveKnight };
+export { startPositionListener, moveKnight, startToFinish };

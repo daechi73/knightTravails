@@ -11,6 +11,7 @@ const renderBoard = (aChessBoard) => {
       const c = document.createElement("div");
       c.classList.add("column");
       c.classList.add(column.code);
+      c.id = column.code;
       c.textContent = column.code;
       rows.appendChild(c);
     });

@@ -40,12 +40,12 @@ const checkBatch = (destination, possibleMoves) => {
   return false;
 };
 const movesMade = (node) => {
-  const steps = [node.value];
+  const moves = [node.value];
   while (node.preNode != null) {
-    steps.unshift(node.preNode.value);
+    moves.unshift(node.preNode.value);
     node = node.preNode;
   }
-  return { steps, numberOfMoves: steps.length - 1 };
+  return { moves, numberOfMoves: moves.length - 1 };
 };
 const find = (destination, position, moves) => {
   let queue = [];

@@ -2,7 +2,9 @@ const renderKnight = (chessBox) => {
   chessBox.innerHTML += `<div class="knight">k</div>`;
 };
 const removeKnight = (chessBox) => {
-  chessBox.removeChild(chessBox.firstElementChild);
+  const knight = document.querySelector(".column>.knight");
+  console.log(knight);
+  chessBox.removeChild(knight);
 };
 const renderMoves = (chessBox, i) => {
   chessBox.innerHTML += `<div class="moves">${i}</div>`;

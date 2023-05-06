@@ -17,22 +17,22 @@ const knightTravail = () => {
     const newBoard = chessBoard();
     renderBoard(newBoard);
 
-    // messageBox().addBox(`Place your Knight on the board`);
-    // msgBoxEventListener();
-    // startPositionListener(newKnight, newBoard);
+    messageBox().addBox(`Place your Knight on the board`);
+    msgBoxEventListener();
+    startPositionListener(newKnight, newBoard);
 
-    newKnight.movesMade = [
-      [1, 4],
-      [2, -2],
-      [-3, 2],
-    ];
-    const cell = document.querySelector(".a8");
-    renderKnight(cell);
-    const btn = document.querySelector(".btn");
-    btn.addEventListener("click", () => {
-      //moveKnight([1, 2], newBoard);
-      startToFinish(newKnight, newBoard);
-    });
+    // newKnight.movesMade = [
+    //   [1, 4],
+    //   [2, -2],
+    //   [-3, 2],
+    // ];
+    // const cell = document.querySelector(".a8");
+    // renderKnight(cell);
+    // const btn = document.querySelector(".btn");
+    // btn.addEventListener("click", () => {
+    //   //moveKnight([1, 2], newBoard);
+    //   startToFinish(newKnight, newBoard);
+    // });
   };
   return { startUp };
 };

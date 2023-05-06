@@ -18,7 +18,7 @@ const placeKnight = (position, chessBox, knight, board) => {
 //takes in knights.movesMade & chessboard;
 //renders each moves[position] to UI chessBoard
 const showPath = (movesMade, board) => {
-  console.log(movesMade);
+  //console.log(movesMade);
   movesMade.moves.forEach((position, i) => {
     if (i > 0) {
       if (i === movesMade.moves.length - 1) {
@@ -67,50 +67,62 @@ const codeToCoordinate = (code, board) => {
   }
 };
 //gets new coordination [initial coordination + transition coordination]
-const newCoordinate = (knightCoord, moveCoord) => {
-  const newCoord = [];
-  knightCoord.forEach((axis, i) => {
-    newCoord.push(axis + moveCoord[i]);
-  });
-  return newCoord;
+const getSteps = (knightCoord, nextMoveCoord, axis) => {
+  let stepsTaken = [];
+  if (axis === "x") {
+    stepsTaken.push(nextMoveCoord[0] - knightCoord[0]);
+    stepsTaken.push(0);
+    nextMoveCoord.push(knightCoord[1]);
+    console.log("nextMoveCoord " + nextMoveCoord);
+
+    console.log("next x " + nextMoveCoord[0]);
+  }
+  if (axis === "y") {
+    stepsTaken.push(0);
+    stepsTaken.push(nextMoveCoord[1] - knightCoord[1]);
+    console.log("next y " + nextMoveCoord[1]);
+  }
+  return stepsTaken;
 };
 
 //moves Knight to each individual axis point from each movement coordination
 const moveKnight = (coord, board, axis) => {
-  //console.log(coord + " " + axis);
-  console.log(coord);
+  const knight = document.querySelector(".knight");
   let [x, y] = coord;
   let temp;
+  let stepsTaken;
+  let newPosition;
   if (axis === "x") {
-    temp = [x, 0];
+    temp = [x];
+    stepsTaken = getSteps(
+      codeToCoordinate(knight.parentElement.id, board),
+      temp,
+      axis
+    );
+    newPosition = temp;
   } else {
     temp = [0, y];
+    stepsTaken = getSteps(
+      codeToCoordinate(knight.parentElement.id, board),
+      temp,
+      axis
+    );
+    newPosition = coord;
   }
-  [x, y] = temp;
+  console.log(stepsTaken);
+  [x, y] = stepsTaken;
   const xLength = x * 51.3;
   const yLength = y * 51.3;
-  const knight = document.querySelector(".knight");
-  const newPosition = newCoordinate(
-    codeToCoordinate(knight.parentElement.id, board),
-    temp
-  );
+
   knight.style.transform = `translateX(${xLength}px) translateY(${yLength}px)`;
 
-  // removeKnight(knight.parentElement);
-  // renderKnight(getSquareUI(coordinateToCode(newPosition, board)));
-
   const deleteTimer = timer(() => {
-    console.log("parent " + knight.parentElement);
-    console.log("knight " + knight);
     removeKnight(knight.parentElement);
-    console.log("working");
   }, 331);
-
   deleteTimer.start();
 
   const renderTimer = timer(() => {
     renderKnight(getSquareUI(coordinateToCode(newPosition, board)));
-    console.log("working2");
   }, 331);
   renderTimer.start();
 };
@@ -120,15 +132,36 @@ const startToFinish = (knight, board) => {
   let count = 0;
   //console.log(knight.movesMade);
   // ************ make sure to change this to knight.movesMade.moves after**********
-  knight.movesMade.forEach((move) => {
+  //console.log(knight.movesMade.moves);
+  knight.movesMade.moves.forEach((move, i) => {
     //moveKnight(move, board, "x");
-    move.forEach((axis, i) => {
-      if (i === 0) setTimeout(() => moveKnight(move, board, "x"), count);
+
+    //skips starting position
+    if (i === 0) {
+      return console.log("starting Position:" + move);
+    }
+    console.log("next Move  " + move);
+    move.forEach((axis, innerI) => {
+      if (innerI === 0) setTimeout(() => moveKnight(move, board, "x"), count);
       count += 331;
-      if (i === 1) setTimeout(() => moveKnight(move, board, "y"), count);
+      if (innerI === 1) setTimeout(() => moveKnight(move, board, "y"), count);
       count += 351;
     });
   });
+};
+
+const startPositionListener = (knight, board) => {
+  const boardUI = document.querySelector(".chessBoard");
+  boardUI.addEventListener(
+    "click",
+    (e) => {
+      placeKnight(e.target.textContent, e.target, knight, board);
+      messageBox().addBox("Pick an end destination");
+      //console.log(e.target.textContent);
+      pickDestinationListener(knight, board);
+    },
+    { once: true }
+  );
 };
 
 //eventlistener that fires the starting of the simulations
@@ -147,23 +180,9 @@ const pickDestinationListener = (knight, board) => {
       );
 
       showPath(knight.movesMade, board, knight);
+      startToFinish(knight, board);
     },
     { once: true }
   );
 };
-
-const startPositionListener = (knight, board) => {
-  const boardUI = document.querySelector(".chessBoard");
-  boardUI.addEventListener(
-    "click",
-    (e) => {
-      placeKnight(e.target.textContent, e.target, knight, board);
-      messageBox().addBox("Pick an end destination");
-      //console.log(e.target.textContent);
-      pickDestinationListener(knight, board);
-    },
-    { once: true }
-  );
-};
-
 export { startPositionListener, moveKnight, startToFinish };

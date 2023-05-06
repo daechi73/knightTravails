@@ -59,8 +59,10 @@ header {
   text-align: center;
   font-size: 30px;
   color: rgb(179, 154, 120);
-  transition: all 300ms ease-in;
+  transition: all 331ms ease-in;
   font-weight: 500;
+  position: absolute;
+  z-index: 99;
 }
 .destination {
   text-align: center;

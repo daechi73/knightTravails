@@ -1,8 +1,8 @@
 body,
 html {
-  height: 100%;
   margin: 0;
   padding: 0;
+  background-color: rgb(255, 255, 255);
 }
 header {
   text-align: center;
@@ -39,15 +39,16 @@ header {
   bottom: 0;
   left: 0;
   right: 0;
+  height: 100vh;
   z-index: 999;
-  background: rgba(90, 90, 90, 0.5);
+  background: rgba(80, 80, 48, 0.9);
 }
 .messageBox {
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 38%;
   background-color: black;
   color: white;
@@ -59,7 +60,7 @@ header {
   text-align: center;
   font-size: 30px;
   color: rgb(179, 154, 120);
-  transition: all 331ms ease-in;
+  transition: all 400ms ease-in;
   font-weight: 500;
 }
 .destination {
@@ -71,4 +72,34 @@ header {
   color: rgb(74, 113, 16);
   font-size: 20px;
   text-align: center;
+}
+.systemMsg {
+  position: fixed;
+  left: 10%;
+  top: 40%;
+  border: solid;
+  height: 100px;
+  width: 200px;
+  border-color: rgb(204, 249, 40);
+  padding: 5px 5px 10px 5px;
+  overflow-y: auto;
+  background-color: black;
+  color: chartreuse;
+}
+.msgBoard {
+  position: fixed;
+  left: 10%;
+  top: 35%;
+  width: 214px;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 20px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width: 100vw;
+  padding: 0 0 10px;
 }

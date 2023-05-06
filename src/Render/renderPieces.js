@@ -12,5 +12,6 @@ const renderMoves = (chessBox, i) => {
 
 const renderDestination = (chessBox) => {
   chessBox.innerHTML += `<div class="endContainer"><div class="destination">E</div></div>`;
+  chessBox.style.backgroundColor = "rgba(31, 16, 106, 0.80)";
 };
 export { renderKnight, removeKnight, renderMoves, renderDestination };

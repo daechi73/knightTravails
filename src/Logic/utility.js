@@ -1,24 +1,20 @@
 import { messageBox } from "../Render/messageBox";
-import knight from "./knight";
 import {
   renderKnight,
   removeKnight,
   renderMoves,
   renderDestination,
 } from "../Render/renderPieces.js";
-import chessBoard from "./board.js";
 import find from "./find.js";
 import timer from "./timer";
 
-//Game Utility
+//**********************Game Utility************************88
+
 const placeKnight = (position, chessBox, knight, board) => {
   knight.currentPosition = codeToCoordinate(position, board);
   renderKnight(chessBox);
 };
 
-const markDestination = (chessBox) => {
-  chessBox.style.backgroundColor = "rgba(31, 16, 106, 0.80)";
-};
 const markStartPosition = (chessBox) => {
   chessBox.style.backgroundColor = "rgba(31, 16, 106, 0.80)";
 };
@@ -61,11 +57,12 @@ const showPath = (movesMade, board) => {
     if (i > 0) {
       if (i === movesMade.moves.length - 1) {
         //special rendering to destination square
-        const endDiv = getSquareUI(
-          coordinateToCode(position, board)
-        ).firstElementChild;
-        //renderMoves(endDiv, i);
-        markDestination(getSquareUI(coordinateToCode(position, board)));
+        // const endDiv = getSquareUI(
+        //   coordinateToCode(position, board)
+        // ).firstElementChild;
+        // //renderMoves(endDiv, i);
+        // markDestination(getSquareUI(coordinateToCode(position, board)));
+        return;
       } else {
         //renders to divs that are not starting and end destination
         renderMoves(getSquareUI(coordinateToCode(position, board)), i);
@@ -125,7 +122,7 @@ const moveKnight = (coord, board, axis) => {
 
   const deleteTimer = timer(() => {
     removeKnight(knight.parentElement);
-  }, 331);
+  }, 400);
   deleteTimer.start();
 
   const renderTimer = timer(() => {
@@ -136,7 +133,7 @@ const moveKnight = (coord, board, axis) => {
 
     // console.log(chessBox.firstElementChild);
     renderKnight(chessBox);
-  }, 331);
+  }, 400);
   renderTimer.start();
 };
 
@@ -151,9 +148,9 @@ const startToFinish = (knight, board) => {
     //console.log("next Move  " + move);
     move.forEach((axis, innerI) => {
       if (innerI === 0) setTimeout(() => moveKnight(move, board, "x"), count);
-      count += 331;
+      count += 400;
       if (innerI === 1) setTimeout(() => moveKnight(move, board, "y"), count);
-      count += 351;
+      count += 430;
     });
   });
 };
@@ -163,14 +160,29 @@ const startPositionListener = (knight, board) => {
   boardUI.addEventListener(
     "click",
     (e) => {
+      //console.log(e.target);
       placeKnight(e.target.textContent, e.target, knight, board);
       markStartPosition(e.target);
+      addSystemMsg(">  Knight Placed");
       messageBox().addBox("Pick an end destination");
       //console.log(e.target.textContent);
       pickDestinationListener(knight, board);
     },
     { once: true }
   );
+};
+const listAllMovesToMsg = (knight) => {
+  knight.movesMade.moves.forEach((move, i) => {
+    if (i === 0) {
+      addSystemMsg(`>  Starting Position: [${move}]`);
+      return;
+    }
+    if (i === knight.movesMade.moves.length - 1) {
+      addSystemMsg(`>  Destination: [${move}]`);
+      return;
+    }
+    addSystemMsg(`>  Next Move: [${move}]`);
+  });
 };
 //eventlistener that fires the starting of the simulations
 const pickDestinationListener = (knight, board) => {
@@ -181,16 +193,25 @@ const pickDestinationListener = (knight, board) => {
     function (e) {
       knight.endPosition = codeToCoordinate(e.target.textContent, board);
       renderDestination(e.target);
+      addSystemMsg(">  Destination picked");
+      //console.log(knight.endPosition);
       knight.movesMade = find(
         knight.endPosition,
         knight.currentPosition,
         knight.moves()
       );
-
+      addSystemMsg(`>  Path Found in ${knight.movesMade.numberOfMoves} moves`);
+      listAllMovesToMsg(knight);
+      addSystemMsg(`>  `);
       showPath(knight.movesMade, board, knight);
       startToFinish(knight, board);
     },
     { once: true }
   );
+};
+
+const addSystemMsg = (msg) => {
+  const systemMsg = document.querySelector(".systemMsg");
+  systemMsg.innerHTML += `<div class="msg">${msg}</div>`;
 };
 export { startPositionListener, moveKnight, startToFinish };

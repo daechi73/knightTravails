@@ -1,5 +1,5 @@
 //find utility
-const node = (value) => {
+export const node = (value) => {
   return { value, preNode: null, nextMoves: null };
 };
 
@@ -13,16 +13,19 @@ const movesToNode = (possibleMove, preNode) => {
   return newNode;
 };
 //x cant be < 0, > 7 ; y cant be < 0 , > 7
-const possibleMoves = (node, moves) => {
+export const possibleMoves = (node, moves) => {
   const possibleMoves = [];
   const [x, y] = node.value;
   moves.forEach((move) => {
     const updatedMove = [];
     const updatedX = x + move[0];
     const updatedY = y + move[1];
+    //console.log(`[${updatedX}, ${updatedY}]`);
     if (updatedX >= 0 && updatedX <= 7) updatedMove.push(updatedX);
     if (updatedY >= 0 && updatedY <= 7) updatedMove.push(updatedY);
-    if (updatedMove[1]) {
+
+    if (updatedMove[1] != null && updatedMove[0] != null) {
+      //console.log(updatedMove);
       possibleMoves.push(movesToNode(updatedMove, node));
     }
   });
@@ -47,6 +50,7 @@ const movesMade = (node) => {
   }
   return { moves, numberOfMoves: moves.length - 1 };
 };
+
 const find = (destination, position, moves) => {
   let queue = [];
   const treeOfAll = treeOfAllTheMoves(node(position));
@@ -57,6 +61,7 @@ const find = (destination, position, moves) => {
     queue = queue.concat(temp.nextMoves);
     const checked = checkBatch(destination, temp.nextMoves);
     if (checked) return movesMade(checked.destinationFound); // checks nextmoves if match destinationpossibleMovesHolder
+    console.log(queue);
     queue.shift();
     temp = queue[0];
   }

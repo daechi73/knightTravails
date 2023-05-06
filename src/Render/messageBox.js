@@ -8,8 +8,8 @@ const messageBox = () => {
   const addBox = (message) => {
     document.body.appendChild(msgBoxContainer);
     box.textContent = message;
-    document.querySelector(".container-main").style.backgroundColor =
-      "rgba(0, 0, 0, 0.7)";
+    //document.querySelector(".container-main").style.backgroundColor =
+    //("rgba(0, 0, 0, 0.7)");
   };
 
   const deleteBox = () => {

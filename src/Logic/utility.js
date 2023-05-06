@@ -171,17 +171,21 @@ const startPositionListener = (knight, board) => {
     { once: true }
   );
 };
-const listAllMovesToMsg = (knight) => {
+const listAllMovesToMsg = (knight, board) => {
   knight.movesMade.moves.forEach((move, i) => {
     if (i === 0) {
-      addSystemMsg(`>  Starting Position: [${move}]`);
+      addSystemMsg(
+        `>  Starting Position: [${move}] ${coordinateToCode(move, board)}`
+      );
       return;
     }
     if (i === knight.movesMade.moves.length - 1) {
-      addSystemMsg(`>  Destination: [${move}]`);
+      addSystemMsg(
+        `>  Destination: [${move}] ${coordinateToCode(move, board)}`
+      );
       return;
     }
-    addSystemMsg(`>  Next Move: [${move}]`);
+    addSystemMsg(`>  Next Move: [${move}] ${coordinateToCode(move, board)}`);
   });
 };
 //eventlistener that fires the starting of the simulations
@@ -201,7 +205,7 @@ const pickDestinationListener = (knight, board) => {
         knight.moves()
       );
       addSystemMsg(`>  Path Found in ${knight.movesMade.numberOfMoves} moves`);
-      listAllMovesToMsg(knight);
+      listAllMovesToMsg(knight, board);
       addSystemMsg(`>  `);
       showPath(knight.movesMade, board, knight);
       startToFinish(knight, board);

@@ -81,14 +81,14 @@ const getSteps = (knightCoord, nextMoveCoord, axis) => {
     stepsTaken.push(nextMoveCoord[0] - knightCoord[0]);
     stepsTaken.push(0);
     nextMoveCoord.push(knightCoord[1]);
-    console.log("nextMoveCoord " + nextMoveCoord);
+    //console.log("nextMoveCoord " + nextMoveCoord);
 
-    console.log("next x " + nextMoveCoord[0]);
+    //console.log("next x " + nextMoveCoord[0]);
   }
   if (axis === "y") {
     stepsTaken.push(0);
     stepsTaken.push(nextMoveCoord[1] - knightCoord[1]);
-    console.log("next y " + nextMoveCoord[1]);
+    //console.log("next y " + nextMoveCoord[1]);
   }
   return stepsTaken;
 };
@@ -129,7 +129,13 @@ const moveKnight = (coord, board, axis) => {
   deleteTimer.start();
 
   const renderTimer = timer(() => {
-    renderKnight(getSquareUI(coordinateToCode(newPosition, board)));
+    const chessBox = getSquareUI(coordinateToCode(newPosition, board));
+    if (chessBox.firstElementChild) {
+      chessBox.removeChild(chessBox.firstElementChild);
+    }
+
+    // console.log(chessBox.firstElementChild);
+    renderKnight(chessBox);
   }, 331);
   renderTimer.start();
 };
@@ -137,17 +143,12 @@ const moveKnight = (coord, board, axis) => {
 //moves knight to starting point to finishing destination.
 const startToFinish = (knight, board) => {
   let count = 0;
-  //console.log(knight.movesMade);
-  // ************ make sure to change this to knight.movesMade.moves after**********
-  //console.log(knight.movesMade.moves);
   knight.movesMade.moves.forEach((move, i) => {
-    //moveKnight(move, board, "x");
-
     //skips starting position
     if (i === 0) {
-      return console.log("starting Position:" + move);
+      return; //console.log("starting Position:" + move);
     }
-    console.log("next Move  " + move);
+    //console.log("next Move  " + move);
     move.forEach((axis, innerI) => {
       if (innerI === 0) setTimeout(() => moveKnight(move, board, "x"), count);
       count += 331;

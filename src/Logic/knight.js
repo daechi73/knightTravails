@@ -22,8 +22,3 @@ const knight = (currentPosition) => {
 };
 
 export default knight;
-// const newKnight = knight([0, 0]);
-//console.log(newKnight.possibleMoves())
-// newKnight.find([2, 1]);
-//console.log(newKnight.currentPosition);
-//console.log(newKnight.possibleMoves(newKnight.currentPosition));

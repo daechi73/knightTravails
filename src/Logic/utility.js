@@ -4,6 +4,7 @@ import {
   renderKnight,
   removeKnight,
   renderMoves,
+  renderDestination,
 } from "../Render/renderPieces.js";
 import chessBoard from "./board.js";
 import find from "./find.js";
@@ -172,7 +173,7 @@ const pickDestinationListener = (knight, board) => {
     "click",
     function (e) {
       knight.endPosition = codeToCoordinate(e.target.textContent, board);
-      e.target.innerHTML += `<div class="endContainer"><div class="destination">E</div></div>`;
+      renderDestination(e.target);
       knight.movesMade = find(
         knight.endPosition,
         knight.currentPosition,

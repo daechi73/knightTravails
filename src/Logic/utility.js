@@ -16,26 +16,12 @@ const placeKnight = (position, chessBox, knight, board) => {
   renderKnight(chessBox);
 };
 
-//takes in knights.movesMade & chessboard;
-//renders each moves[position] to UI chessBoard
-const showPath = (movesMade, board) => {
-  //console.log(movesMade);
-  movesMade.moves.forEach((position, i) => {
-    if (i > 0) {
-      if (i === movesMade.moves.length - 1) {
-        //special rendering to destination square
-        const endDiv = getSquareUI(
-          coordinateToCode(position, board)
-        ).firstElementChild;
-        renderMoves(endDiv, i);
-      } else {
-        //renders to divs that are not starting and end destination
-        renderMoves(getSquareUI(coordinateToCode(position, board)), i);
-      }
-    }
-  });
+const markDestination = (chessBox) => {
+  chessBox.style.backgroundColor = "rgba(31, 16, 106, 0.80)";
 };
-
+const markStartPosition = (chessBox) => {
+  chessBox.style.backgroundColor = "rgba(31, 16, 106, 0.80)";
+};
 const getSquareUI = (squareCode) => {
   const squareUI = document.querySelector(`.${squareCode}`);
   return squareUI;
@@ -67,6 +53,27 @@ const codeToCoordinate = (code, board) => {
     }
   }
 };
+
+//takes in knights.movesMade & chessboard;
+//renders each moves[position] to UI chessBoard
+const showPath = (movesMade, board) => {
+  movesMade.moves.forEach((position, i) => {
+    if (i > 0) {
+      if (i === movesMade.moves.length - 1) {
+        //special rendering to destination square
+        const endDiv = getSquareUI(
+          coordinateToCode(position, board)
+        ).firstElementChild;
+        //renderMoves(endDiv, i);
+        markDestination(getSquareUI(coordinateToCode(position, board)));
+      } else {
+        //renders to divs that are not starting and end destination
+        renderMoves(getSquareUI(coordinateToCode(position, board)), i);
+      }
+    }
+  });
+};
+
 //gets new coordination [initial coordination + transition coordination]
 const getSteps = (knightCoord, nextMoveCoord, axis) => {
   let stepsTaken = [];
@@ -110,7 +117,6 @@ const moveKnight = (coord, board, axis) => {
     );
     newPosition = coord;
   }
-  console.log(stepsTaken);
   [x, y] = stepsTaken;
   const xLength = x * 51.3;
   const yLength = y * 51.3;
@@ -157,6 +163,7 @@ const startPositionListener = (knight, board) => {
     "click",
     (e) => {
       placeKnight(e.target.textContent, e.target, knight, board);
+      markStartPosition(e.target);
       messageBox().addBox("Pick an end destination");
       //console.log(e.target.textContent);
       pickDestinationListener(knight, board);
@@ -164,7 +171,6 @@ const startPositionListener = (knight, board) => {
     { once: true }
   );
 };
-
 //eventlistener that fires the starting of the simulations
 const pickDestinationListener = (knight, board) => {
   const boardUI = document.querySelector(".chessBoard");

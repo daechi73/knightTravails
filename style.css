@@ -9,6 +9,11 @@ header {
   font-size: 30px;
   margin-top: 50px;
 }
+header {
+  text-align: center;
+  font-size: 30px;
+  margin-top: 50px;
+}
 .container-main {
   display: flex;
   justify-content: center;
